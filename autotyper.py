@@ -1,12 +1,39 @@
-from keyboard import write
+from keyboard import write, press_and_release
+import time
 from time import sleep
 import tkinter as tk
+
+
+def removeComments(input_str):
+    lines = input_str.strip().split('\n')
+    output_lines = []
+    for line in lines:
+        if not '//' in line:
+            output_lines.append(line)
+
+    output_str = '\n'.join(output_lines)
+    return output_str
+
+
+def holdDelete():
+    start_time = time.time()
+
+    while time.time() - start_time < 1:
+        press_and_release('delete')
+        pass
 
 
 def typeInput():
     sleep(5)
     a = text.get('1.0', 'end-1c')
-    write(a)
+    notabs = a.replace("    ", "")  # Removes all the tabs in the code
+    nocomments = removeComments(notabs)
+
+    for i in nocomments:
+
+        write(i)
+        sleep(0.02)
+    holdDelete()
 
 
 def clearText():
@@ -28,8 +55,10 @@ Instructions:
    window you clicked
 
 Note:
-Might Need to fix some spaces yourself due to how elab works
+Wait for 2 seconds even after it looks like the autotyper is done working
 Press 'Clear' to clear this text
+
+
 '''
 
 text.insert('1.0', instructions)
